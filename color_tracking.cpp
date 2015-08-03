@@ -3,10 +3,13 @@
 #include <stdlib.h>
 #include <iostream>
 
-int const MIN_AREA = 20*20;
+int const MIN_AREA = 30*30;
 
+void const drawObject(cv::Point const &center, cv::Mat &frame){
+	cv::circle(frame, center, 20, cv::Scalar(0, 255, 0), 2);
+}
 
-cv::Point findObject(cv::Mat const &imgThresholed){
+cv::Point const findObject(cv::Mat const &imgThresholed){
 	int posX = 0, posY = 0;
 	cv::Moments mom = moments(imgThresholed);
 	if(mom.m00 > MIN_AREA){
@@ -16,7 +19,7 @@ cv::Point findObject(cv::Mat const &imgThresholed){
 	return cv::Point(posX, posY);
 }
 
-void morphOps(cv::Mat &img, cv::Mat const &structuringElement){
+void const morphOps(cv::Mat &img, cv::Mat const &structuringElement){
 	//morphological opening (remove small objects from the foreground)	
 	cv::erode(img, img, structuringElement);
 	cv::dilate(img, img, structuringElement);
@@ -27,6 +30,8 @@ void morphOps(cv::Mat &img, cv::Mat const &structuringElement){
 
 int main(){
 	using namespace cv;
+	std::cout << "ECS: Quit" << std::endl;
+	std::cout << "SPACEBAR: toggle tracking" << std::endl;
 
 	VideoCapture cap(0);
 	if(!cap.isOpened()){
@@ -50,6 +55,7 @@ int main(){
 
 	Mat imgOrginal, imgHSV, imgThresholded;
 	Mat se = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
+	bool tracking = false;
 	while(true){
 		if(!cap.read(imgOrginal)){
 			std::cerr << "could not read frame from video stream!" << std::endl;
@@ -61,11 +67,20 @@ int main(){
 	
 		morphOps(imgThresholded, se);
 		imshow("Thresholded Image", imgThresholded);
+		if(tracking){
+			Point p = findObject(imgThresholded);
+			if(p.x != 0 && p.y != 0){
+				drawObject(p, imgOrginal);
+			}
+		}
 		imshow("Orginal", imgOrginal);
 
 		switch(waitKey(30)){
 			case 27: //ESC
 				return EXIT_SUCCESS;
+			break;
+			case 32: //SPACEBAR
+				tracking = !tracking;
 			break;
 			default:
 				//do nothing
