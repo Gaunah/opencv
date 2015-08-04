@@ -17,5 +17,9 @@ color_tracking: color_tracking.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
+motion_tracking: motion_tracking.cpp
+	mkdir -p bin
+	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
+
 clean:
 	rm -rf bin 
