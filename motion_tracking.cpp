@@ -4,12 +4,26 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <vector>
+
+int const SENSITIVTY = 20;
+cv::Size const BLUR_SIZE(10, 10);
 
 
 std::string const intToString(int n){
 	std::stringstream ss;
 	ss << n;
 	return ss.str();
+}
+
+cv::Point const searchForMovement(cv::Mat const &imgThreshold){
+	int posX = 0, int posY = 0;
+	std::vector<std::vector<cv::Point>> contours;
+	cv::findContours(imgThreshold, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+	if(contours.size > 0){ //found something
+		//TODO
+	}
+	return cv::Point(posX, posY);
 }
 
 void const drawObject(cv::Point const &center, cv::Mat &frame, bool showCoords = false){
@@ -38,7 +52,7 @@ int main(){
 		return EXIT_FAILURE;
 	}
 
-	Mat imgOrginal, imgOrginal2, imgGray1, imgGray2, imgDiff;	
+	Mat imgOrginal, imgOrginal2, imgGray1, imgGray2, imgDiff, imgThreshold;	
 	bool tracking = false, showCoords = false;
 	while(true){
 		if(!cap.read(imgOrginal)){
@@ -50,12 +64,15 @@ int main(){
 		cvtColor(imgOrginal2, imgGray2, COLOR_BGR2GRAY);
 
 		absdiff(imgGray1, imgGray2, imgDiff);
+		blur(imgDiff, imgDiff, BLUR_SIZE);
+		threshold(imgDiff, imgThreshold, SENSITIVTY, 255, THRESH_BINARY);
+		
 
 		if(tracking){
 			//tracking action	
 		}
 		
-		imshow("Orginal", imgDiff);
+		imshow("Orginal", imgThreshold);
 
 		int keyCode = waitKey(30);
 		switch(keyCode){
