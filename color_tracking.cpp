@@ -2,11 +2,23 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <stdlib.h>
 #include <iostream>
+#include <string>
+#include <sstream>
 
 int const MIN_AREA = 30*30;
 
+
+std::string const intToString(int n){
+	std::stringstream ss;
+	ss << n;
+	return ss.str();
+}
+
 void const drawObject(cv::Point const &center, cv::Mat &frame){
-	cv::circle(frame, center, 20, cv::Scalar(0, 255, 0), 2);
+	cv::Scalar color(0, 255, 0);
+	cv::circle(frame, center, 15, color, 2);
+	//std::string coords = "x" + intToString(center.x) + ", y" + intToString(center.y);
+	//cv::putText(frame, coords, cv::Point(center.x + 25, center.y), 1, 1, color, 1);
 }
 
 cv::Point const findObject(cv::Mat const &imgThresholed){
