@@ -14,11 +14,13 @@ std::string const intToString(int n){
 	return ss.str();
 }
 
-void const drawObject(cv::Point const &center, cv::Mat &frame){
+void const drawObject(cv::Point const &center, cv::Mat &frame, bool showCoords = false){
 	cv::Scalar color(0, 255, 0);
 	cv::circle(frame, center, 15, color, 2);
-	//std::string coords = "x" + intToString(center.x) + ", y" + intToString(center.y);
-	//cv::putText(frame, coords, cv::Point(center.x + 25, center.y), 1, 1, color, 1);
+	if(showCoords){
+		std::string coords = "x" + intToString(center.x) + " y" + intToString(center.y);
+		cv::putText(frame, coords, cv::Point(center.x + 20, center.y), 1, 1, color, 1);
+	}
 }
 
 cv::Point const findObject(cv::Mat const &imgThresholed){
@@ -40,10 +42,16 @@ void const morphOps(cv::Mat &img, cv::Mat const &structuringElement){
 	cv::erode(img, img, structuringElement);
 }
 
+void const intro(){
+	using namespace std;
+	cout << "ECS: Quit" << endl;
+	cout << "SPACEBAR: toggle tracking" << endl;
+	cout << "c: toggle coords" << endl;
+}
+
 int main(){
 	using namespace cv;
-	std::cout << "ECS: Quit" << std::endl;
-	std::cout << "SPACEBAR: toggle tracking" << std::endl;
+	intro();
 
 	VideoCapture cap(0);
 	if(!cap.isOpened()){
@@ -67,7 +75,7 @@ int main(){
 
 	Mat imgOrginal, imgHSV, imgThresholded;
 	Mat se = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
-	bool tracking = false;
+	bool tracking = false, showCoords = false;
 	while(true){
 		if(!cap.read(imgOrginal)){
 			std::cerr << "could not read frame from video stream!" << std::endl;
@@ -82,20 +90,26 @@ int main(){
 		if(tracking){
 			Point p = findObject(imgThresholded);
 			if(p.x != 0 && p.y != 0){
-				drawObject(p, imgOrginal);
+				drawObject(p, imgOrginal, showCoords);
 			}
 		}
 		imshow("Orginal", imgOrginal);
 
-		switch(waitKey(30)){
+		int keyCode = waitKey(30);
+		switch(keyCode){
 			case 27: //ESC
 				return EXIT_SUCCESS;
 			break;
 			case 32: //SPACEBAR
 				tracking = !tracking;
 			break;
+			case 99: // c key
+				showCoords = !showCoords;
+			break;
 			default:
-				//do nothing
+				if(keyCode >= 0){
+					std::cout << "keyCode: " << keyCode << std::endl;
+				}
 			break;
 		}
 	}
