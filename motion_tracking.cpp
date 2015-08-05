@@ -6,8 +6,8 @@
 #include <sstream>
 #include <vector>
 
-int const SENSITIVTY = 20;
-cv::Size const BLUR_SIZE(10, 10);
+//int const SENSITIVTY = 10;
+//int const BLUR_SIZE = 30;
 
 
 std::string const intToString(int n){
@@ -16,19 +16,21 @@ std::string const intToString(int n){
 	return ss.str();
 }
 
-cv::Point const searchForMovement(cv::Mat const &imgThreshold){
-	int posX = 0, int posY = 0;
+cv::Rect const searchForMovement(cv::Mat const &imgThreshold){
+	cv::Mat tmp;
+	imgThreshold.copyTo(tmp); // i don't know why this is necessary :(
+	cv::Rect boundingRectangle;
 	std::vector<std::vector<cv::Point>> contours;
-	cv::findContours(imgThreshold, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
-	if(contours.size > 0){ //found something
-		//TODO
+	cv::findContours(tmp, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+	if(contours.size() > 0){ //found something
+		boundingRectangle = cv::boundingRect(contours[contours.size() - 1]);
 	}
-	return cv::Point(posX, posY);
+	return boundingRectangle;
 }
 
 void const drawObject(cv::Point const &center, cv::Mat &frame, bool showCoords = false){
 	cv::Scalar color(0, 255, 0);
-	cv::circle(frame, center, 15, color, 2);
+	if(center.x > 0 && center.y > 0){ cv::circle(frame, center, 15, color, 2); }
 	if(showCoords){
 		std::string coords = "x" + intToString(center.x) + " y" + intToString(center.y);
 		cv::putText(frame, coords, cv::Point(center.x + 20, center.y), 1, 1, color, 1);
@@ -52,6 +54,11 @@ int main(){
 		return EXIT_FAILURE;
 	}
 
+	namedWindow("Control", CV_WINDOW_AUTOSIZE);
+	int SENSITIVTY = 10, BLUR_SIZE = 30;
+	cvCreateTrackbar("Sensitivity", "Control", &SENSITIVTY, 100);
+	cvCreateTrackbar("Blur size", "Control", &BLUR_SIZE, 100);
+
 	Mat imgOrginal, imgOrginal2, imgGray1, imgGray2, imgDiff, imgThreshold;	
 	bool tracking = false, showCoords = false;
 	while(true){
@@ -64,15 +71,16 @@ int main(){
 		cvtColor(imgOrginal2, imgGray2, COLOR_BGR2GRAY);
 
 		absdiff(imgGray1, imgGray2, imgDiff);
-		blur(imgDiff, imgDiff, BLUR_SIZE);
+		blur(imgDiff, imgDiff, Size(BLUR_SIZE+1, BLUR_SIZE+1));
 		threshold(imgDiff, imgThreshold, SENSITIVTY, 255, THRESH_BINARY);
 		
-
 		if(tracking){
-			//tracking action	
+			Rect r = searchForMovement(imgThreshold);
+			drawObject(Point(r.x + r.width / 2, r.y + r.height / 2), imgOrginal, showCoords);
 		}
 		
-		imshow("Orginal", imgThreshold);
+		imshow("Thresholded", imgThreshold);
+		imshow("Orginal", imgOrginal);
 
 		int keyCode = waitKey(30);
 		switch(keyCode){
