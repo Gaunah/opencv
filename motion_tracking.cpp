@@ -29,7 +29,7 @@ cv::Rect const searchForMovement(cv::Mat const &imgThreshold){
 }
 
 void const drawObject(cv::Point const &center, cv::Mat &frame, bool showCoords = false){
-	cv::Scalar color(0, 255, 0);
+	cv::Scalar color(0, 0, 255);
 	if(center.x > 0 && center.y > 0){ cv::circle(frame, center, 15, color, 2); }
 	if(showCoords){
 		std::string coords = "x" + intToString(center.x) + " y" + intToString(center.y);
@@ -54,6 +54,7 @@ int main(){
 		return EXIT_FAILURE;
 	}
 
+	//control window
 	namedWindow("Control", CV_WINDOW_AUTOSIZE);
 	int SENSITIVTY = 10, BLUR_SIZE = 30;
 	cvCreateTrackbar("Sensitivity", "Control", &SENSITIVTY, 100);
@@ -61,6 +62,7 @@ int main(){
 
 	Mat imgOrginal, imgOrginal2, imgGray1, imgGray2, imgDiff, imgThreshold;	
 	bool tracking = false, showCoords = false;
+	Point lastPos;
 	while(true){
 		if(!cap.read(imgOrginal)){
 			std::cerr << "could not read frame from video stream!" << std::endl;
@@ -76,7 +78,10 @@ int main(){
 		
 		if(tracking){
 			Rect r = searchForMovement(imgThreshold);
-			drawObject(Point(r.x + r.width / 2, r.y + r.height / 2), imgOrginal, showCoords);
+			if(r.area() != 0){
+				lastPos = Point(r.x + r.width / 2, r.y + r.height / 2);
+			}
+			drawObject(lastPos, imgOrginal, showCoords);
 		}
 		
 		imshow("Thresholded", imgThreshold);
