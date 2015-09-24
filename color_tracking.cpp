@@ -49,16 +49,23 @@ void const intro(){
 	cout << "c: toggle coords" << endl;
 }
 
-int main(){
+int main(int argc, char* argv[]){
 	using namespace cv;
 	intro();
 
-	VideoCapture cap(0);
+	VideoCapture cap;
+	if(argc == 2){
+		cap.open(argv[1]);
+	} else {
+		cap.open(0);
+	}
+
 	if(!cap.isOpened()){
 		std::cerr << "could not open webcam!" << std::endl;
 		return EXIT_FAILURE;
 	}
 
+	//Control window
 	namedWindow("Control", CV_WINDOW_AUTOSIZE);
 	int lowH = 0, highH = 179;
 	int lowS = 0, highS = 255;
@@ -72,6 +79,10 @@ int main(){
 
 	cvCreateTrackbar("LowV", "Control", &lowV, 255);
 	cvCreateTrackbar("HighV", "Control", &highV, 255);
+	////
+
+	namedWindow("Orginal", CV_WINDOW_KEEPRATIO);
+	namedWindow("Thresholded Image", CV_WINDOW_KEEPRATIO);
 
 	Mat imgOrginal, imgHSV, imgThresholded;
 	Mat se = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
@@ -81,10 +92,10 @@ int main(){
 			std::cerr << "could not read frame from video stream!" << std::endl;
 			return EXIT_FAILURE;
 		}
-		
+
 		cvtColor(imgOrginal, imgHSV, COLOR_BGR2HSV);
 		inRange(imgHSV, Scalar(lowH, lowS, lowV), Scalar(highH, highS, highV), imgThresholded);
-	
+
 		morphOps(imgThresholded, se);
 		imshow("Thresholded Image", imgThresholded);
 		if(tracking){
@@ -99,18 +110,18 @@ int main(){
 		switch(keyCode){
 			case 27: //ESC
 				return EXIT_SUCCESS;
-			break;
+				break;
 			case 32: //SPACEBAR
 				tracking = !tracking;
-			break;
+				break;
 			case 99: // c key
 				showCoords = !showCoords;
-			break;
+				break;
 			default:
 				if(keyCode >= 0){
 					std::cout << "keyCode: " << keyCode << std::endl;
 				}
-			break;
+				break;
 		}
 	}
 
