@@ -21,5 +21,9 @@ motion_tracking: motion_tracking.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
+cannyfilter: cannyfilter.cpp
+	mkdir -p bin
+	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
+
 clean:
 	rm -rf bin 
