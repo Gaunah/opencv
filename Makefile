@@ -25,6 +25,10 @@ cannyfilter: cannyfilter.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
+cut_image: cut_image.cpp
+	mkdir -p bin
+	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
+
 test: test.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
