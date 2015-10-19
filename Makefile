@@ -33,5 +33,13 @@ test: test.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
+histogram: histogram.cpp
+	mkdir -p bin
+	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
+
+kmeans: kmeans.cpp
+	mkdir -p bin
+	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
+
 clean:
 	rm -rf bin 
