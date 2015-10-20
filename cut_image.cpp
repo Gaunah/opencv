@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <iostream>
 
+int lowH = 0, highH = 179;
+int lowS = 0, highS = 255;
+int lowV = 0, highV = 255;
+
 cv::Rect const getRegionOfInterest(cv::Mat const &imgThreshold){
 	cv::Mat tmp;
 	imgThreshold.copyTo(tmp); // i don't know why this is necessary :(
@@ -11,7 +15,7 @@ cv::Rect const getRegionOfInterest(cv::Mat const &imgThreshold){
 	cv::findContours(tmp, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
 	if(contours.size() > 0){ //found something
 		int maxArea = 0;
-		for(int i = 0; i < contours.size(); i++){
+		for(unsigned int i = 0; i < contours.size(); i++){
 			cv::Rect tmpRect = cv::boundingRect(contours[i]);
 			if(tmpRect.area() > maxArea){
 				boundingRectangle = tmpRect;
@@ -31,6 +35,17 @@ void morphOps(cv::Mat &img, cv::Mat const &structuringElement){
 	cv::erode(img, img, structuringElement);
 }
 
+void createControl(){
+	cvCreateTrackbar("LowH", "Thresholded Image", &lowH, 179);
+	cvCreateTrackbar("HighH", "Thresholded Image", &highH, 179);
+
+	cvCreateTrackbar("LowS", "Thresholded Image", &lowS, 255);
+	cvCreateTrackbar("HighS", "Thresholded Image", &highS, 255);
+
+	cvCreateTrackbar("LowV", "Thresholded Image", &lowV, 255);
+	cvCreateTrackbar("HighV", "Thresholded Image", &highV, 255);
+}
+
 int main(int argc, char* argv[]){
 	using namespace cv;
 
@@ -40,22 +55,13 @@ int main(int argc, char* argv[]){
 	}
 
 	//namedWindow("Control", CV_WINDOW_AUTOSIZE);
-	//int lowH = 0, highH = 179;
-	//int lowS = 0, highS = 255;
-	//int lowV = 0, highV = 255;
-
-	//cvCreateTrackbar("LowH", "Control", &lowH, 179);
-	//cvCreateTrackbar("HighH", "Control", &highH, 179);
-
-	//cvCreateTrackbar("LowS", "Control", &lowS, 255);
-	//cvCreateTrackbar("HighS", "Control", &highS, 255);
-
-	//cvCreateTrackbar("LowV", "Control", &lowV, 255);
-	//cvCreateTrackbar("HighV", "Control", &highV, 255);
 
 	namedWindow("Thresholded Image", CV_WINDOW_KEEPRATIO);
 	namedWindow("Orginal", CV_WINDOW_KEEPRATIO);
 	namedWindow("Cut", CV_WINDOW_KEEPRATIO);
+	namedWindow("HSV", CV_WINDOW_KEEPRATIO);
+	createControl();
+
 	Mat imgOrginal, imgHSV, imgThresholded, imgCut;
 	Mat se = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
 	while(true){
@@ -66,16 +72,17 @@ int main(int argc, char* argv[]){
 		}
 
 		cvtColor(imgOrginal, imgHSV, COLOR_BGR2HSV);
-		//inRange(imgHSV, Scalar(lowH, lowS, lowV), Scalar(highH, highS, highV), imgThresholded);
-		inRange(imgHSV, Scalar(0, 0, 0), Scalar(180, 170, 170), imgThresholded);
+		inRange(imgHSV, Scalar(lowH, lowS, lowV), Scalar(highH, highS, highV), imgThresholded);
+		//inRange(imgHSV, Scalar(0, 0, 0), Scalar(180, 170, 170), imgThresholded);
 
 		morphOps(imgThresholded, se);
-		
+
 		//rectangle(imgOrginal, getRegionOfInterest(imgThresholded), cv::Scalar(0, 0, 255), 8);
 		imgOrginal(getRegionOfInterest(imgThresholded)).copyTo(imgCut);
 		imshow("Thresholded Image", imgThresholded);
 		imshow("Orginal", imgOrginal);
 		imshow("Cut", imgCut);
+		imshow("HSV", imgHSV);
 
 		switch(waitKey(10)){
 			case 27: //ESC
