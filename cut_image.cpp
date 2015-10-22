@@ -60,7 +60,7 @@ int main(int argc, char* argv[]){
 	namedWindow("Orginal", CV_WINDOW_KEEPRATIO);
 	namedWindow("Cut", CV_WINDOW_KEEPRATIO);
 	namedWindow("HSV", CV_WINDOW_KEEPRATIO);
-	createControl();
+	//createControl();
 
 	Mat imgOrginal, imgHSV, imgThresholded, imgCut;
 	Mat se = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
@@ -72,8 +72,8 @@ int main(int argc, char* argv[]){
 		}
 
 		cvtColor(imgOrginal, imgHSV, COLOR_BGR2HSV);
-		inRange(imgHSV, Scalar(lowH, lowS, lowV), Scalar(highH, highS, highV), imgThresholded);
-		//inRange(imgHSV, Scalar(0, 0, 0), Scalar(180, 170, 170), imgThresholded);
+		//inRange(imgHSV, Scalar(lowH, lowS, lowV), Scalar(highH, highS, highV), imgThresholded);
+		inRange(imgHSV, Scalar(0, 30, 0), Scalar(50, 130, 200), imgThresholded);
 
 		morphOps(imgThresholded, se);
 
