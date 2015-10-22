@@ -2,9 +2,13 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
 
-cv::Mat imgOrginal, imgMShift;
+cv::Mat imgOrginal, imgMShift, imgROI;
 int sr = 0; //The spatial window radius.
 int sp = 0; //The color window radius.
+
+cv::Rect const getRectangle(cv::Mat const &mat){
+	return cv::Rect(0, 0, mat.size().width, mat.size().height/2);
+}
 
 void PMShift(int, void*){
 	cv::pyrMeanShiftFiltering(imgOrginal, imgMShift, sp, sr, 1);
@@ -27,12 +31,20 @@ int main(int argc, char* argv[]){
 	
 	namedWindow("Orginal", CV_WINDOW_KEEPRATIO);
 	namedWindow("Mean Shift", CV_WINDOW_KEEPRATIO);
-	createTrackbar("Spatial radius", "Orginal", &sr, 100, PMShift);
-	createTrackbar("Color radius", "Orginal", &sp, 100, PMShift);
+	//createTrackbar("Spatial radius", "Orginal", &sr, 100, PMShift);
+	//createTrackbar("Color radius", "Orginal", &sp, 100, PMShift);
+	pyrMeanShiftFiltering(imgOrginal, imgMShift, 20, 35, 1);
 
-	imshow("Orginal", imgOrginal);
-	PMShift(0, 0);
+	imgOrginal.copyTo(imgROI);
+	Mat mask(imgOrginal.size(), CV_8U, Scalar(0));
+	rectangle(mask, getRectangle(imgOrginal), Scalar(1), -1);
+
+	imshow("Orginal", imgROI);
+	imgOrginal.copyTo(imgMShift, mask);
+	imshow("Mean Shift", imgMShift);
+	//PMShift(0, 0);
 
 	while(waitKey(0) != 27){}; //wait until ESC is hit
+	//imwrite("out.jpg", imgMShift);
 	return 0;
 }
