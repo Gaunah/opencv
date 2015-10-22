@@ -2,13 +2,13 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
 
-Mat imgOrginal, imgMShift;
+cv::Mat imgOrginal, imgMShift;
 int sr = 0; //The spatial window radius.
 int sp = 0; //The color window radius.
 
 void PMShift(int, void*){
-	pyrMeanShiftFiltering(imgOrginal, imgMShift, sp, sr, 1);
-	imshow("Mean Shift", imgMShift);
+	cv::pyrMeanShiftFiltering(imgOrginal, imgMShift, sp, sr, 1);
+	cv::imshow("Mean Shift", imgMShift);
 }
 
 int main(int argc, char* argv[]){
