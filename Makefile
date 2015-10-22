@@ -41,5 +41,9 @@ kmeans: kmeans.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
+mean_shift_seg: mean_shift_seg.cpp
+	mkdir -p bin
+	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
+
 clean:
 	rm -rf bin 
