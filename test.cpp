@@ -1,4 +1,3 @@
-// Usage: ./app input.jpg
 #include "opencv2/opencv.hpp"
 #include <string>
 

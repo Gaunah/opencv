@@ -1,7 +1,7 @@
+#include <iostream>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <stdlib.h>
-#include <iostream>
 
 void morphOps(cv::Mat &img, cv::Mat const &structuringElement){
 	//morphological opening (remove small objects from the foreground)	

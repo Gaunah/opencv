@@ -1,9 +1,9 @@
+#include <iostream>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <stdlib.h>
-#include <iostream>
-#include <string>
 #include <sstream>
+#include <stdlib.h>
+#include <string>
 
 int const MIN_AREA = 30*30;
 

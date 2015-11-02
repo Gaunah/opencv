@@ -1,6 +1,6 @@
-#include <opencv/highgui.h>
-#include <opencv/cv.h>
 #include <iostream>
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
 #include <stdlib.h>
 
 #define WINDOW_NAME "WebCam Feed"

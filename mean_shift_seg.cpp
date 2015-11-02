@@ -1,6 +1,6 @@
+#include <iostream>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <iostream>
 
 cv::Mat imgOrginal, imgMShift, imgROI;
 int sr = 20; //The spatial window radius.
