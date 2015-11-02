@@ -64,35 +64,27 @@ int main(int argc, char* argv[]){
 
 	Mat imgOrginal, imgHSV, imgThresholded, imgCut;
 	Mat se = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
-	while(true){
-		imgOrginal = imread(argv[1]);
-		if(!imgOrginal.data){
-			std::cerr << "could not read img!" << std::endl;
-			return EXIT_FAILURE;
-		}
 
-		cvtColor(imgOrginal, imgHSV, COLOR_BGR2HSV);
-		//inRange(imgHSV, Scalar(lowH, lowS, lowV), Scalar(highH, highS, highV), imgThresholded);
-		inRange(imgHSV, Scalar(0, 30, 0), Scalar(50, 130, 200), imgThresholded);
-
-		morphOps(imgThresholded, se);
-
-		//rectangle(imgOrginal, getRegionOfInterest(imgThresholded), cv::Scalar(0, 0, 255), 8);
-		imgOrginal(getRegionOfInterest(imgThresholded)).copyTo(imgCut);
-		imshow("Thresholded Image", imgThresholded);
-		imshow("Orginal", imgOrginal);
-		imshow("Cut", imgCut);
-		imshow("HSV", imgHSV);
-
-		switch(waitKey(10)){
-			case 27: //ESC
-				return EXIT_SUCCESS;
-				break;
-			default:
-				//do nothing
-				break;
-		}
+	imgOrginal = imread(argv[1]);
+	if(!imgOrginal.data){
+		std::cerr << "could not read img!" << std::endl;
+		return EXIT_FAILURE;
 	}
 
+	cvtColor(imgOrginal, imgHSV, COLOR_BGR2HSV);
+	//inRange(imgHSV, Scalar(lowH, lowS, lowV), Scalar(highH, highS, highV), imgThresholded);
+	inRange(imgHSV, Scalar(0, 30, 0), Scalar(50, 130, 200), imgThresholded);
+
+	morphOps(imgThresholded, se);
+
+	//rectangle(imgOrginal, getRegionOfInterest(imgThresholded), cv::Scalar(0, 0, 255), 8);
+	imgOrginal(getRegionOfInterest(imgThresholded)).copyTo(imgCut);
+	imshow("Thresholded Image", imgThresholded);
+	imshow("Orginal", imgOrginal);
+	imshow("Cut", imgCut);
+	imshow("HSV", imgHSV);
+
+	while(waitKey(0) != 27){}; //wait until ESC is hit
+	imwrite("out.jpg", imgCut);
 	return EXIT_SUCCESS;
 }
