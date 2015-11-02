@@ -3,8 +3,8 @@
 #include <iostream>
 
 cv::Mat imgOrginal, imgMShift, imgROI;
-int sr = 0; //The spatial window radius.
-int sp = 0; //The color window radius.
+int sr = 20; //The spatial window radius.
+int sp = 35; //The color window radius.
 
 cv::Rect const getRectangle(cv::Mat const &mat){
 	return cv::Rect(0, 0, mat.size().width, mat.size().height/2);
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]){
 	namedWindow("Mean Shift", CV_WINDOW_KEEPRATIO);
 	//createTrackbar("Spatial radius", "Orginal", &sr, 100, PMShift);
 	//createTrackbar("Color radius", "Orginal", &sp, 100, PMShift);
-	pyrMeanShiftFiltering(imgOrginal, imgMShift, 20, 35, 1);
+	pyrMeanShiftFiltering(imgOrginal, imgMShift, sr, sp, 1);
 
 	imgOrginal.copyTo(imgROI);
 	Mat mask(imgOrginal.size(), CV_8U, Scalar(0));
@@ -45,6 +45,6 @@ int main(int argc, char* argv[]){
 	//PMShift(0, 0);
 
 	while(waitKey(0) != 27){}; //wait until ESC is hit
-	//imwrite("out.jpg", imgMShift);
+	imwrite("out.jpg", imgMShift);
 	return 0;
 }
