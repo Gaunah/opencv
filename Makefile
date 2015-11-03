@@ -1,43 +1,47 @@
 CFLAGS=-std=c++11 -Wall
 LIBS=-lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_objdetect
 
-cam: cam.cpp 
+cam: src/cam.cpp 
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
-writer: writer.cpp
+writer: src/writer.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
-color_detection: color_detection.cpp
+color_detection: src/color_detection.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
-color_tracking: color_tracking.cpp
+color_tracking: src/color_tracking.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
-motion_tracking: motion_tracking.cpp
+motion_tracking: src/motion_tracking.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
-cannyfilter: cannyfilter.cpp
+cannyfilter: src/cannyfilter.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
-cut_image: cut_image.cpp
+cut_image: src/cut_image.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
-histogram: histogram.cpp
+histogram: src/histogram.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
-kmeans: kmeans.cpp
+kmeans: src/kmeans.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
-mean_shift_seg: mean_shift_seg.cpp
+mean_shift_seg: src/mean_shift_seg.cpp
+	mkdir -p bin
+	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
+
+gpu_test: src/gpu_test.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
