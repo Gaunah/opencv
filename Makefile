@@ -43,7 +43,7 @@ mean_shift_seg: src/mean_shift_seg.cpp
 
 gpu_test: src/gpu_test.cpp
 	mkdir -p bin
-	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
+	g++ $(CFLAGS) $(LIBS) -lopencv_gpu $< -o bin/$@
 
 clean:
 	rm -rf bin 
