@@ -29,10 +29,6 @@ cut_image: cut_image.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
-test: test.cpp
-	mkdir -p bin
-	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
-
 histogram: histogram.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
