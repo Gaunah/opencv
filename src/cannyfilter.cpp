@@ -28,20 +28,20 @@ int main(int argc, char* argv[]){
 	}
 
 	createControlPanel();
-	Mat imgOrginal, imgGray, imgCanny;
+	Mat imgOriginal, imgGray, imgCanny;
 	while(true){ //loop until ESC
-		if(!cap.read(imgOrginal)){
+		if(!cap.read(imgOriginal)){
 			std::cerr << "could not read frame from video stream!" << std::endl;
 			return -1;
 		}
 
-		cvtColor(imgOrginal, imgGray, COLOR_BGR2GRAY); //convert to grayscale
+		cvtColor(imgOriginal, imgGray, COLOR_BGR2GRAY); //convert to grayscale
 		GaussianBlur(imgGray, imgGray, Size(5, 5), sigma);
 		Canny(imgGray, imgCanny, low, high);
 
-		namedWindow("Orginal", CV_WINDOW_KEEPRATIO);
+		namedWindow("Original", CV_WINDOW_KEEPRATIO);
 		namedWindow("Canny", CV_WINDOW_KEEPRATIO);
-		imshow("Orginal", imgOrginal);
+		imshow("Original", imgOriginal);
 		imshow("Canny", imgCanny);
 
 		switch(waitKey(10)){

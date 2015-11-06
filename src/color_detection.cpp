@@ -35,20 +35,20 @@ int main(){
 	cvCreateTrackbar("LowV", "Control", &lowV, 255);
 	cvCreateTrackbar("HighV", "Control", &highV, 255);
 
-	Mat imgOrginal, imgHSV, imgThresholded;
+	Mat imgOriginal, imgHSV, imgThresholded;
 	Mat se = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
 	while(true){
-		if(!cap.read(imgOrginal)){
+		if(!cap.read(imgOriginal)){
 			std::cerr << "could not read frame from video stream!" << std::endl;
 			return EXIT_FAILURE;
 		}
 		
-		cvtColor(imgOrginal, imgHSV, COLOR_BGR2HSV);
+		cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV);
 		inRange(imgHSV, Scalar(lowH, lowS, lowV), Scalar(highH, highS, highV), imgThresholded);
 	
 		morphOps(imgThresholded, se);
 		imshow("Thresholded Image", imgThresholded);
-		imshow("Orginal", imgOrginal);
+		imshow("Original", imgOriginal);
 
 		switch(waitKey(30)){
 			case 27: //ESC

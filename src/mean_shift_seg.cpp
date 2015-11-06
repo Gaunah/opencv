@@ -2,7 +2,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-cv::Mat imgOrginal, imgMShift, imgROI;
+cv::Mat imgOriginal, imgMShift, imgROI;
 int sr = 20; //The spatial window radius.
 int sp = 35; //The color window radius.
 
@@ -11,7 +11,7 @@ cv::Rect const getRectangle(cv::Mat const &mat){
 }
 
 void PMShift(int, void*){
-	cv::pyrMeanShiftFiltering(imgOrginal, imgMShift, sp, sr, 1);
+	cv::pyrMeanShiftFiltering(imgOriginal, imgMShift, sp, sr, 1);
 	cv::imshow("Mean Shift", imgMShift);
 }
 
@@ -19,28 +19,28 @@ int main(int argc, char* argv[]){
 	using namespace cv;
 
 	if(argc == 2){
-		imgOrginal = imread(argv[1]);
+		imgOriginal = imread(argv[1]);
 	} else {
 		std::cerr << "usage: ./mean_shift_seg <img file>" << std::endl;
 		return -1;
 	}
-	if(!imgOrginal.data){
+	if(!imgOriginal.data){
 		std::cerr << "could not read img from: " << argv[1] << std::endl;
 		return -1;
 	}
 	
-	namedWindow("Orginal", CV_WINDOW_KEEPRATIO);
+	namedWindow("Original", CV_WINDOW_KEEPRATIO);
 	namedWindow("Mean Shift", CV_WINDOW_KEEPRATIO);
-	//createTrackbar("Spatial radius", "Orginal", &sr, 100, PMShift);
-	//createTrackbar("Color radius", "Orginal", &sp, 100, PMShift);
-	pyrMeanShiftFiltering(imgOrginal, imgMShift, sr, sp, 1);
+	//createTrackbar("Spatial radius", "Original", &sr, 100, PMShift);
+	//createTrackbar("Color radius", "Original", &sp, 100, PMShift);
+	pyrMeanShiftFiltering(imgOriginal, imgMShift, sr, sp, 1);
 
-	imgOrginal.copyTo(imgROI);
-	Mat mask(imgOrginal.size(), CV_8U, Scalar(0));
-	rectangle(mask, getRectangle(imgOrginal), Scalar(1), -1);
+	imgOriginal.copyTo(imgROI);
+	Mat mask(imgOriginal.size(), CV_8U, Scalar(0));
+	rectangle(mask, getRectangle(imgOriginal), Scalar(1), -1);
 
-	imshow("Orginal", imgROI);
-	imgOrginal.copyTo(imgMShift, mask);
+	imshow("Original", imgROI);
+	imgOriginal.copyTo(imgMShift, mask);
 	imshow("Mean Shift", imgMShift);
 	//PMShift(0, 0);
 

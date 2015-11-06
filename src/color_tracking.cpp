@@ -81,19 +81,19 @@ int main(int argc, char* argv[]){
 	cvCreateTrackbar("HighV", "Control", &highV, 255);
 	////
 
-	namedWindow("Orginal", CV_WINDOW_KEEPRATIO);
+	namedWindow("Original", CV_WINDOW_KEEPRATIO);
 	namedWindow("Thresholded Image", CV_WINDOW_KEEPRATIO);
 
-	Mat imgOrginal, imgHSV, imgThresholded;
+	Mat imgOriginal, imgHSV, imgThresholded;
 	Mat se = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
 	bool tracking = false, showCoords = false;
 	while(true){
-		if(!cap.read(imgOrginal)){
+		if(!cap.read(imgOriginal)){
 			std::cerr << "could not read frame from video stream!" << std::endl;
 			return EXIT_FAILURE;
 		}
 
-		cvtColor(imgOrginal, imgHSV, COLOR_BGR2HSV);
+		cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV);
 		inRange(imgHSV, Scalar(lowH, lowS, lowV), Scalar(highH, highS, highV), imgThresholded);
 
 		morphOps(imgThresholded, se);
@@ -101,10 +101,10 @@ int main(int argc, char* argv[]){
 		if(tracking){
 			Point p = findObject(imgThresholded);
 			if(p.x != 0 && p.y != 0){
-				drawObject(p, imgOrginal, showCoords);
+				drawObject(p, imgOriginal, showCoords);
 			}
 		}
-		imshow("Orginal", imgOrginal);
+		imshow("Original", imgOriginal);
 
 		int keyCode = waitKey(30);
 		switch(keyCode){

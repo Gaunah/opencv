@@ -60,17 +60,17 @@ int main(){
 	cvCreateTrackbar("Sensitivity", "Control", &SENSITIVTY, 100);
 	cvCreateTrackbar("Blur size", "Control", &BLUR_SIZE, 100);
 
-	Mat imgOrginal, imgOrginal2, imgGray1, imgGray2, imgDiff, imgThreshold;	
+	Mat imgOriginal, imgOriginal2, imgGray1, imgGray2, imgDiff, imgThreshold;	
 	bool tracking = false, showCoords = false;
 	Point lastPos;
 	while(true){
-		if(!cap.read(imgOrginal)){
+		if(!cap.read(imgOriginal)){
 			std::cerr << "could not read frame from video stream!" << std::endl;
 			return EXIT_FAILURE;
 		}
-		cvtColor(imgOrginal, imgGray1, COLOR_BGR2GRAY);
-		cap.read(imgOrginal2);
-		cvtColor(imgOrginal2, imgGray2, COLOR_BGR2GRAY);
+		cvtColor(imgOriginal, imgGray1, COLOR_BGR2GRAY);
+		cap.read(imgOriginal2);
+		cvtColor(imgOriginal2, imgGray2, COLOR_BGR2GRAY);
 
 		absdiff(imgGray1, imgGray2, imgDiff);
 		blur(imgDiff, imgDiff, Size(BLUR_SIZE+1, BLUR_SIZE+1));
@@ -81,11 +81,11 @@ int main(){
 			if(r.area() != 0){
 				lastPos = Point(r.x + r.width / 2, r.y + r.height / 2);
 			}
-			drawObject(lastPos, imgOrginal, showCoords);
+			drawObject(lastPos, imgOriginal, showCoords);
 		}
 		
 		imshow("Thresholded", imgThreshold);
-		imshow("Orginal", imgOrginal);
+		imshow("Original", imgOriginal);
 
 		int keyCode = waitKey(30);
 		switch(keyCode){

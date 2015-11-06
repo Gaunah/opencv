@@ -57,30 +57,30 @@ int main(int argc, char* argv[]){
 	//namedWindow("Control", CV_WINDOW_AUTOSIZE);
 
 	namedWindow("Thresholded Image", CV_WINDOW_KEEPRATIO);
-	namedWindow("Orginal", CV_WINDOW_KEEPRATIO);
+	namedWindow("Original", CV_WINDOW_KEEPRATIO);
 	namedWindow("Cut", CV_WINDOW_KEEPRATIO);
 	namedWindow("HSV", CV_WINDOW_KEEPRATIO);
 	//createControl();
 
-	Mat imgOrginal, imgHSV, imgThresholded, imgCut;
+	Mat imgOriginal, imgHSV, imgThresholded, imgCut;
 	Mat se = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
 
-	imgOrginal = imread(argv[1]);
-	if(!imgOrginal.data){
+	imgOriginal = imread(argv[1]);
+	if(!imgOriginal.data){
 		std::cerr << "could not read img!" << std::endl;
 		return EXIT_FAILURE;
 	}
 
-	cvtColor(imgOrginal, imgHSV, COLOR_BGR2HSV);
+	cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV);
 	//inRange(imgHSV, Scalar(lowH, lowS, lowV), Scalar(highH, highS, highV), imgThresholded);
 	inRange(imgHSV, Scalar(0, 30, 0), Scalar(50, 130, 200), imgThresholded);
 
 	morphOps(imgThresholded, se);
 
-	//rectangle(imgOrginal, getRegionOfInterest(imgThresholded), cv::Scalar(0, 0, 255), 8);
-	imgOrginal(getRegionOfInterest(imgThresholded)).copyTo(imgCut);
+	//rectangle(imgOriginal, getRegionOfInterest(imgThresholded), cv::Scalar(0, 0, 255), 8);
+	imgOriginal(getRegionOfInterest(imgThresholded)).copyTo(imgCut);
 	imshow("Thresholded Image", imgThresholded);
-	imshow("Orginal", imgOrginal);
+	imshow("Original", imgOriginal);
 	imshow("Cut", imgCut);
 	imshow("HSV", imgHSV);
 
