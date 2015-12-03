@@ -31,8 +31,8 @@ int main(int argc, char* argv[]){
 	
 	namedWindow("Original", CV_WINDOW_KEEPRATIO);
 	namedWindow("Mean Shift", CV_WINDOW_KEEPRATIO);
-	//createTrackbar("Spatial radius", "Original", &sr, 100, PMShift);
-	//createTrackbar("Color radius", "Original", &sp, 100, PMShift);
+	createTrackbar("Spatial radius", "Original", &sr, 100, PMShift);
+	createTrackbar("Color radius", "Original", &sp, 100, PMShift);
 	pyrMeanShiftFiltering(imgOriginal, imgMShift, sr, sp, 1);
 
 	imgOriginal.copyTo(imgROI);
@@ -45,6 +45,6 @@ int main(int argc, char* argv[]){
 	//PMShift(0, 0);
 
 	while(waitKey(0) != 27){}; //wait until ESC is hit
-	imwrite("out.jpg", imgMShift);
+	//imwrite("out.jpg", imgMShift);
 	return 0;
 }
