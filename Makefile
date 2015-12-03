@@ -45,5 +45,9 @@ gpu_test: src/gpu_test.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) -lopencv_gpu $< -o bin/$@
 
+hough_circle: src/hough_circle.cpp
+	mkdir -p bin
+	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
+
 clean:
 	rm -rf bin 
