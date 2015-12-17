@@ -11,17 +11,29 @@ int main( int argc, char** argv ){
 	}
 
 	namedWindow("Original", CV_WINDOW_KEEPRATIO);
-	namedWindow("Blur", CV_WINDOW_KEEPRATIO);
-	Mat imgOriginal, imgBlur;
+	namedWindow("Gauss", CV_WINDOW_KEEPRATIO);
+	namedWindow("Median", CV_WINDOW_KEEPRATIO);
+	namedWindow("Bilateral", CV_WINDOW_KEEPRATIO);
+	Mat imgOriginal, imgGauss, imgMedian, imgBilateral;
 	
 	imgOriginal = imread(argv[1]);
 	if(!imgOriginal.data){
 		std::cerr << "could not read img!" << std::endl;
 		return -1;
 	}
+	Size ksize(11, 11);
+	cv::GaussianBlur(imgOriginal, imgGauss, ksize, 0);
+	cv::medianBlur(imgOriginal, imgMedian, 11);
+	
+	double sigmaColor = 10, simgaSpace = 10;
+	cv::bilateralFilter(imgOriginal, imgBilateral, 10, sigmaColor, simgaSpace, 0);
 
-	//TODO
+	imshow("Original", imgOriginal);
+	imshow("Gauss", imgGauss);
+	imshow("Median", imgMedian);
+	imshow("Bilateral", imgBilateral);
 
+	while(waitKey(0) != 27){}; //wait until ESC is hit
 	return 0;
 }
 
