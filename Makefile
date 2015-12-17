@@ -49,5 +49,9 @@ hough_circle: src/hough_circle.cpp
 	mkdir -p bin
 	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
 
+blurs: src/blurs.cpp
+	mkdir -p bin
+	g++ $(CFLAGS) $(LIBS) $< -o bin/$@
+
 clean:
 	rm -rf bin 
