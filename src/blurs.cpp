@@ -21,9 +21,12 @@ int main( int argc, char** argv ){
 		std::cerr << "could not read img!" << std::endl;
 		return -1;
 	}
-	Size ksize(11, 11);
+	
+	cvtColor(imgOriginal, imgOriginal, COLOR_BGR2GRAY);
+
+	Size ksize(7, 7);
 	cv::GaussianBlur(imgOriginal, imgGauss, ksize, 0);
-	cv::medianBlur(imgOriginal, imgMedian, 11);
+	cv::medianBlur(imgOriginal, imgMedian, 7);
 	
 	double sigmaColor = 10, simgaSpace = 10;
 	cv::bilateralFilter(imgOriginal, imgBilateral, 10, sigmaColor, simgaSpace, 0);
